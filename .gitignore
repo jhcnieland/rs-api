@@ -1,0 +1,19 @@
+# Hidden files
+.*
+
+# Temporary files
+*~
+
+# Git
+!.git*
+
+# Travis CI
+!.travis.yml
+
+# Gradle
+build/
+
+# IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
