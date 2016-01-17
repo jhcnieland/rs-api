@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>RuneScape API by MikeBull94</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">RuneScape API</h1>
+      <h2 class="project-tagline">An open-source implementation of a web-service client, written in Java, that allows interaction with the various APIs available for the popular MMORPG; RuneScape.</h2>
+      <a href="https://github.com/MikeBull94/rs-api" class="btn">View on GitHub</a>
+      <a href="https://github.com/MikeBull94/rs-api/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/MikeBull94/rs-api/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="runescape-api" class="anchor" href="#runescape-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>RuneScape API</h1>
+
+<p><a href="https://travis-ci.org/MikeBull94/rs-api"><img src="https://travis-ci.org/MikeBull94/rs-api.svg?branch=master" alt="Build Status"></a></p>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p><code>rs-api</code> is an open-source implementation of a web-service client, written in <a href="https://www.java.com/">Java</a>, that allows interaction with the various <a href="http://en.wikipedia.org/wiki/Application_programming_interface">APIs</a> available for the popular <a href="http://en.wikipedia.org/wiki/Massively_multiplayer_online_role-playing_game">MMORPG</a>; <a href="http://runescape.com/">RuneScape</a>.</p>
+
+<p>Javadoc is available <a href="http://mikebull94.github.io/rs-api/docs/javadoc/">here</a>.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The implementation offers functionality to interact with the following three public web-services:</p>
+
+<ul>
+<li><a href="http://services.runescape.com/m=rswiki/en/Bestiary_APIs">Bestiary</a></li>
+<li><a href="http://services.runescape.com/m=rswiki/en/Grand_Exchange_APIs">Grand Exchange</a></li>
+<li><a href="http://services.runescape.com/m=rswiki/en/Hiscores_APIs">Hiscores</a></li>
+</ul>
+
+<p><a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> and <a href="http://en.wikipedia.org/wiki/JSON">JSON</a> results are parsed by the API and returned as interactable Java <a href="https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html"><code>Object</code></a>s.</p>
+
+<p>To start using <code>rs-api</code>, simply instantiate a <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> based <a href="/api/src/main/java/com/runescape/api/RuneScapeAPI.java"><code>RuneScapeAPI</code></a> class as follows:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">RuneScapeAPI</span> api <span class="pl-k">=</span> <span class="pl-smi">RuneScapeAPI</span><span class="pl-k">.</span>createHttp();</pre></div>
+
+<p><strong>Note:</strong> The API can run using a <a href="/shared/src/main/java/com/runescape/api/HttpClient.java"><code>HttpClient</code></a> on the live RuneScape web-service, or a user supplied <a href="/shared/src/main/java/com/runescape/api/Client.java"><code>Client</code></a> (e.g. a <a href="/bestiary/src/test/java/com/runescape/api/bestiary/BestiaryTest.java#L162"><code>FakeClient</code></a> for mocked unit testing).</p>
+
+<p>At which point you may now access and query the <a href="/bestiary/src/main/java/com/runescape/api/bestiary/Bestiary.java"><code>Bestiary</code></a>, <a href="/ge/src/main/java/com/runescape/api/ge/GrandExchange.java"><code>GrandExchange</code></a>, and <a href="/hiscores/src/main/java/com/runescape/api/hiscores/Hiscores.java"><code>Hiscores</code></a> API objects:</p>
+
+<div class="highlight highlight-source-java"><pre>    <span class="pl-smi">Bestiary</span> bestiary <span class="pl-k">=</span> api<span class="pl-k">.</span>bestiary();
+    <span class="pl-smi">GrandExchange</span> grandExchange <span class="pl-k">=</span> api<span class="pl-k">.</span>grandExchange();
+    <span class="pl-smi">Hiscores</span> hiscores <span class="pl-k">=</span> api<span class="pl-k">.</span>hiscores();</pre></div>
+
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<h3>
+<a id="search-in-bestiary" class="anchor" href="#search-in-bestiary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Search in Bestiary</h3>
+
+<p>The <a href="/bestiary/src/main/java/com/runescape/api/bestiary/Bestiary.java"><code>Bestiary</code></a> API facilitates searching for a beast given a number of search filters (e.g. name, weakness, <a href="http://runescape.wikia.com/wiki/Slayer">Slayer</a> category).</p>
+
+<p>Numerous filters can be applied to the <a href="/bestiary/src/main/java/com/runescape/api/bestiary/Search.java"><code>Search</code></a> by chaining them together, and are <a href="http://en.wikipedia.org/wiki/Lazy_evaluation">lazily evaluated</a> when calling the terminal <code>results</code> method.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">Map&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">String</span>&gt;</span> beasts <span class="pl-k">=</span> bestiary<span class="pl-k">.</span>search()
+    .filterByNameTerms(<span class="pl-s"><span class="pl-pds">"</span>dragon<span class="pl-pds">"</span></span>)
+    .filterByArea(<span class="pl-s"><span class="pl-pds">"</span>Taverley Dungeon<span class="pl-pds">"</span></span>)
+    .filterByLevel(<span class="pl-c1">100</span>, <span class="pl-c1">140</span>)
+    .results();
+
+<span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Results:<span class="pl-pds">"</span></span>);
+<span class="pl-k">for</span> (<span class="pl-smi">Map</span><span class="pl-k">.</span><span class="pl-k">Entry&lt;<span class="pl-smi">Integer</span>, <span class="pl-smi">String</span>&gt;</span> entry <span class="pl-k">:</span> beasts<span class="pl-k">.</span>entrySet()) {
+    <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\t</span>[<span class="pl-pds">"</span></span> <span class="pl-k">+</span> <span class="pl-smi">String</span><span class="pl-k">.</span>format(<span class="pl-s"><span class="pl-pds">"</span>%04d<span class="pl-pds">"</span></span>, entry<span class="pl-k">.</span>getKey()) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span>] <span class="pl-pds">"</span></span> <span class="pl-k">+</span> entry<span class="pl-k">.</span>getValue());
+}</pre></div>
+
+<p>Outputs:</p>
+
+<pre><code>Results:
+    [0054] Black dragon (100)
+    [4673] Black dragon (100)
+</code></pre>
+
+<h3>
+<a id="item-price-on-day" class="anchor" href="#item-price-on-day" aria-hidden="true"><span class="octicon octicon-link"></span></a>Item Price on Day</h3>
+
+<p>Calling the <code>graphingData</code> method with an <a href="/ge/src/main/java/com/runescape/api/ge/model/Item.java"><code>Item</code></a>'s ID as the parameter (e.g. 4151 for an <a href="http://services.runescape.com/m=itemdb_rs/Abyssal_whip/viewitem.ws?obj=4151">Abyssal whip</a>) in the <a href="/ge/src/main/java/com/runescape/api/ge/GrandExchange.java"><code>GrandExchange</code></a> API will return the price information that may be used for graphical representation of an <a href="/ge/src/main/java/com/runescape/api/ge/model/Item.java"><code>Item</code></a>'s price history.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">Optional&lt;<span class="pl-smi">GraphingData</span>&gt;</span> optional <span class="pl-k">=</span> grandExchange<span class="pl-k">.</span>graphingData(<span class="pl-c1">4151</span>);
+
+optional<span class="pl-k">.</span>ifPresent(graphingData <span class="pl-k">-</span><span class="pl-k">&gt;</span> {
+    <span class="pl-smi">LocalDate</span> christmas <span class="pl-k">=</span> <span class="pl-smi">LocalDate</span><span class="pl-k">.</span>of(<span class="pl-c1">2014</span>, <span class="pl-smi">Month</span><span class="pl-c1"><span class="pl-k">.</span>DECEMBER</span>, <span class="pl-c1">25</span>);
+    <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Daily price on Christmas 2014: <span class="pl-pds">"</span></span> <span class="pl-k">+</span> graphingData<span class="pl-k">.</span>getDailyValue(christmas)<span class="pl-k">.</span>get());
+});</pre></div>
+
+<p>Outputs:</p>
+
+<pre><code>Daily price on Christmas 2014: 117549
+</code></pre>
+
+<h3>
+<a id="player-hiscore-rank" class="anchor" href="#player-hiscore-rank" aria-hidden="true"><span class="octicon octicon-link"></span></a>Player Hiscore Rank</h3>
+
+<p>Calling the <code>playerInformation</code> method with a <a href="/hiscores/src/main/java/com/runescape/api/hiscores/model/Player.java"><code>Player</code></a>'s name as a parameter (e.g. Drumgun) and a Hiscore <a href="/hiscores/src/main/java/com/runescape/api/hiscores/model/Table.java"><code>Table</code></a> as a parameter (e.g. <code>Table.DEFAULT</code>) in the <a href="/hiscores/src/main/java/com/runescape/api/hiscores/Hiscores.java"><code>Hiscores</code></a> API will return the hiscore information for the <a href="/hiscores/src/main/java/com/runescape/api/hiscores/model/Player.java"><code>Player</code></a>, including <a href="/hiscores/src/main/java/com/runescape/api/hiscores/model/Skill.java"><code>Skill</code></a> levels and <a href="/hiscores/src/main/java/com/runescape/api/hiscores/model/Activity.java"><code>Activity</code></a> ranks.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">Optional&lt;<span class="pl-smi">Player</span>&gt;</span> optional <span class="pl-k">=</span> hiscores<span class="pl-k">.</span>playerInformation(<span class="pl-s"><span class="pl-pds">"</span>Drumgun<span class="pl-pds">"</span></span>, <span class="pl-smi">Table</span><span class="pl-c1"><span class="pl-k">.</span>DEFAULT</span>);
+
+optional<span class="pl-k">.</span>ifPresent(player <span class="pl-k">-</span><span class="pl-k">&gt;</span> <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Overall rank: <span class="pl-pds">"</span></span> <span class="pl-k">+</span> player<span class="pl-k">.</span>getSkills()<span class="pl-k">.</span>get(<span class="pl-s"><span class="pl-pds">"</span>Overall<span class="pl-pds">"</span></span>)));</pre></div>
+
+<p>Outputs:</p>
+
+<pre><code>Overall rank: Skill{rank=1, level=2595, experience=5200000000}
+</code></pre>
+
+<h3>
+<a id="clan-information" class="anchor" href="#clan-information" aria-hidden="true"><span class="octicon octicon-link"></span></a>Clan Information</h3>
+
+<p>Calling the <code>clanInformation</code> method with a clan's name (e.g. Sapphite Knights) as the parameter in the <a href="/hiscores/src/main/java/com/runescape/api/hiscores/Hiscores.java"><code>Hiscores</code></a> API will return an <a href="http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/collect/ImmutableList.html"><code>ImmutableList</code></a> of <a href="/hiscores/src/main/java/com/runescape/api/hiscores/model/ClanMate.java"><code>ClanMate</code></a>s.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">List&lt;<span class="pl-smi">ClanMate</span>&gt;</span> clanMates <span class="pl-k">=</span> hiscores<span class="pl-k">.</span>clanInformation(<span class="pl-s"><span class="pl-pds">"</span>Sapphite Knights<span class="pl-pds">"</span></span>);
+
+<span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Clan Mates:<span class="pl-pds">"</span></span>);
+clanMates<span class="pl-k">.</span>forEach(<span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">::</span>println);</pre></div>
+
+<p>Outputs:</p>
+
+<pre><code>Clan Mates:
+ClanMate{name=Rosaline, rank=Owner, experience=463143387, kills=0}
+ClanMate{name=Corp Sloter, rank=Deputy Owner, experience=678318180, kills=54}
+ClanMate{name=GorgeousBrat, rank=Deputy Owner, experience=166603367, kills=0}
+ClanMate{name=Chris Return, rank=Overseer, experience=306089480, kills=0}
+ClanMate{name=Sauf, rank=Overseer, experience=346299506, kills=3}
+...
+</code></pre>
+
+<h2>
+<a id="building" class="anchor" href="#building" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building</h2>
+
+<p><a href="http://www.gradle.org/">Gradle</a> is used as the build system. The <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html">Gradle Wrapper</a> is included in the distribution and as such, installation of Gradle by the user is not required.</p>
+
+<p>Run <code>gradlew</code> in the project's root directory to build the application and run the unit tests.</p>
+
+<h2>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<p>The following Java libraries are used by the API:</p>
+
+<ul>
+<li><a href="https://commons.apache.org/">Apache Commons</a></li>
+<li><a href="https://hc.apache.org/">Apache HttpComponents</a></li>
+<li><a href="https://code.google.com/p/google-gson/">Google Gson</a></li>
+<li><a href="https://code.google.com/p/guava-libraries/">Google Guava</a></li>
+<li><a href="http://junit.org/">JUnit</a></li>
+<li><a href="http://www.slf4j.org/">SLF4J</a></li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p><code>rs-api</code> is available under the terms of the <a href="https://www.isc.org/downloads/software-support-policy/isc-license/">ISC license</a>, which is similar to the 2-clause BSD license. See the <code>LICENSE</code> file for the copyright information and licensing terms.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/MikeBull94/rs-api">RuneScape API</a> is maintained by <a href="https://github.com/MikeBull94">MikeBull94</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
