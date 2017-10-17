@@ -54,7 +54,8 @@ public final class Hiscores {
 		"Construction",
 		"Summoning",
 		"Dungeoneering",
-		"Divination"
+		"Divination",
+		"Invention"
 	);
 
 	/**
